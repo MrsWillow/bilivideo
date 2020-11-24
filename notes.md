@@ -1,4 +1,4 @@
-# vue 配置
+## vue 配置
 ### 1 vue ui
 ```
  打开vue项目管理,可以导入你的vue项目
@@ -13,3 +13,8 @@
 ```
  固定名字: vue.config.js
 ```
+## vue路由
+```
+this.$router  创建的路由对象
+this.$route   当前活跃的路由
+``` 
