@@ -4,6 +4,7 @@
 <!--    <button @click="btnClick">首页</button>-->
     <router-link to="/about" tag="button">关于</router-link>
     <router-link :to="'/user/' + userName" tag="button">用户</router-link>
+    <router-link :to="{ path: '/profile',query: { name: 'pig',age: 15 } }" tag="button">档案</router-link>
     <router-view></router-view>
   </div>
 </template>

@@ -1,10 +1,19 @@
 <template>
-    <h2>主页/消息</h2>
+    <div>
+        <h2>新闻列表</h2>
+        <li v-for="item in newsList" :key="item">{{ item }}</li>
+    </div>
+
 </template>
 
 <script>
     export default {
-        name: "HomeNews"
+        name: "HomeNews",
+        data() {
+            return {
+                newsList: ['新闻1','新闻2','新闻3']
+            }
+        }
     }
 </script>
 
