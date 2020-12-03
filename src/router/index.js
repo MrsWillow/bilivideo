@@ -20,6 +20,7 @@ const routes = [
   {
     path: '/home',
     component: Home,
+    // meta: 元数据(描述数据的数据)
     meta: {
       title: '首页'
     },
@@ -67,8 +68,16 @@ const router = new VueRouter({
   // linkActiveClass: 'active'  // 对应路由匹配成功时，当前元素class
 })
 
+
+// 前置守卫 guard
 router.beforeEach((to,from,next) => {
   // 从 from 跳转到 to
+  document.title = to.matched[0].meta.title
   next() //必须调用该函数，不然不能跳转
+})
+
+//后置钩子 hook
+router.afterEach((to,from,) => {
+
 })
 export default router

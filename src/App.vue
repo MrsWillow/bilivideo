@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <router-link to="/home" tag="button">首页</router-link>
-<!--    <button @click="btnClick">首页</button>-->
     <router-link to="/about" tag="button">关于</router-link>
     <router-link :to="'/user/' + userName" tag="button">用户</router-link>
     <router-link :to="{ path: '/profile',query: { name: 'pig',age: 15 } }" tag="button">档案</router-link>
-    <router-view></router-view>
+<!--  缓存不包括 Profile (vue 文件 script 中 name, 多个可使用逗号分隔，但逗号后不要加空格)  -->
+    <keep-alive exclude="Profile">
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 
@@ -16,11 +18,6 @@ export default {
   data() {
     return {
       userName: 'pig'
-    }
-  },
-  methods: {
-    btnClick() {
-      this.$router.push('/home')
     }
   }
 }

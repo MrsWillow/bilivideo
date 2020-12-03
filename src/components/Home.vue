@@ -7,3 +7,29 @@
     </div>
 
 </template>
+<script>
+    export default {
+        name: 'Home',
+        data() {
+            return {
+                path: '/home/news'
+            }
+        },
+        created() {
+            console.log('Home create')
+        },
+        destroyed() {
+            console.log('Home destroyed')
+        },
+        // 在keep-alive 时会执行该函数
+        activated() {
+            console.log('activated')
+            this.$router.push(this.path)
+        },
+        beforeRouteLeave(to,form,next) {
+            console.log('from',this.$route.path)
+            this.path = this.$route.path
+            next()
+        }
+    }
+</script>
