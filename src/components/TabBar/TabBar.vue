@@ -17,6 +17,8 @@
                 reject('error')
             }).then((data) => {
                 console.log(data)
+                // return Promise.resolve('aaa')
+                // return 'aaa'
                 return new Promise((resolve,reject) => {
                     setTimeout(() => {
                         resolve('aaa')
@@ -26,6 +28,23 @@
                 })
             }).catch(error => {
                 console.log(error)
+            })
+
+            Promise.all([
+                new Promise(reslove => {
+                    setTimeout(() => {
+                        console.log('请求1');
+                        reslove('请求1')
+                    },2000)
+                }),
+                new Promise(reslove => {
+                    setTimeout(() => {
+                        console.log('请求2');
+                        reslove('请求2')
+                    },1000)
+                }),
+            ]).then(results => {
+                console.log(results)
             })
         },
     }
