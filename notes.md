@@ -23,3 +23,14 @@ this.$route   当前活跃的路由
 Promise 是异步编程的一种解决方案,有异步操作时，使用Promise对这个异步操作进行封装
 
 ```
+## 对象的解构
+```
+const obj = {
+    name: 'pig',
+    age: 14,
+    height: 150,
+    address: '美国'
+}
+const { name,address,age } = obj
+``
+```
