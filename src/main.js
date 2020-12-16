@@ -11,3 +11,10 @@ new Vue({
   router,
   store
 }).$mount('#app')
+
+import { request } from "./network/request";
+request({
+  url: '/home/data?type=pop&page=1'
+}).then(res => {
+  console.log(res.data);
+})

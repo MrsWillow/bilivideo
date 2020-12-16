@@ -34,3 +34,8 @@ const obj = {
 const { name,address,age } = obj
 ``
 ```
+##数组解构
+```
+const names = [a,b,c]
+const [name1,name2,name3] = names  ==>  name1 = a
+```

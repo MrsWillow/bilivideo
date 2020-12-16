@@ -24,27 +24,27 @@
                         resolve('aaa')
                     },2000)
                 }).then((data) => {
-                    console.log(data)
+                    // console.log(data)
                 })
             }).catch(error => {
-                console.log(error)
+                // console.log(error)
             })
 
             Promise.all([
                 new Promise(reslove => {
                     setTimeout(() => {
-                        console.log('请求1');
+                        // console.log('请求1');
                         reslove('请求1')
                     },2000)
                 }),
                 new Promise(reslove => {
                     setTimeout(() => {
-                        console.log('请求2');
+                        // console.log('请求2');
                         reslove('请求2')
                     },1000)
                 }),
             ]).then(results => {
-                console.log(results)
+                // console.log(results)
             })
         },
     }
