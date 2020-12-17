@@ -13,8 +13,17 @@ new Vue({
 }).$mount('#app')
 
 import { request } from "./network/request";
+// request({
+//   url: ''
+// },res => {
+//
+// },err => {
+//
+// })
 request({
   url: '/home/data?type=pop&page=1'
 }).then(res => {
-  console.log(res.data);
+  console.log(res)
+}).catch(err => {
+  console.log(err);
 })

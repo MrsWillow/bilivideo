@@ -1,10 +1,6 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
-import HomeNews from "../components/HomeNews";
 Vue.use(VueRouter)
-// import Home from '../components/Home'
-// import About from '../components/About'
-// import User from "../components/User";
 //路由懒加载
 const Home = () => import('../views/home/Home')
 const Category = () => import('../views/category/Category')
