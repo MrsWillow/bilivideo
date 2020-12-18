@@ -1,8 +1,8 @@
 <template>
   <tab-bar>
     <tab-bar-item path="/home">
-      <img slot="item-icon" src="@/assets/img/tabbar/home.svg" alt="">
-      <img slot="item-icon-active" src="src/assets/img/tabbar/home_active.svg" alt="">
+      <img slot="item-icon" src="~assets/img/tabbar/home.svg" alt="">
+      <img slot="item-icon-active" src="~assets/img/tabbar/home_active" alt="">
       <div slot="item-text">首页</div>
     </tab-bar-item>
 <!--    <tab-bar-item path="/category">-->
@@ -24,8 +24,8 @@
 </template>
 
 <script>
-    import TabBar from "components/common/TabBar/TabBar";
-    import TabBarItem from "components/common/TabBar/TabBarItem";
+    import TabBar from "../../common/TabBar/TabBar";
+    import TabBarItem from "../../common/TabBar/TabBarItem";
     export default {
         name: "MainTabBar",
         components: {
