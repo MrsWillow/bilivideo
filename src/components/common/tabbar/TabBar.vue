@@ -7,7 +7,6 @@
 <script>
     export default {
         name: "TabBar",
-
         // Promise 使用
         mounted() {
             new Promise((resolve,reject) => {
