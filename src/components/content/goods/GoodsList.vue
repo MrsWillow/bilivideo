@@ -23,5 +23,11 @@
 </script>
 
 <style scoped>
+  .goods {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;  /* 均分  */
 
+    padding: 2px;
+  }
 </style>
