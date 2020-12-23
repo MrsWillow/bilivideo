@@ -1,14 +1,15 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <home-swiper :banners="banners"/>
-    <recommend-view :recommends="recommends"/>
-    <feature-view/>
-    <tab-control class="tab-control"
-                 :titles="['流行','新款','精选']"
-                 @tabClick="tabClick"/>
-    <goods-list :goods="showGoods"/>
-
+    <Scroll class="content">
+      <home-swiper :banners="banners"/>
+      <recommend-view :recommends="recommends"/>
+      <feature-view/>
+      <tab-control class="tab-control"
+                   :titles="['流行','新款','精选']"
+                   @tabClick="tabClick"/>
+      <goods-list :goods="showGoods"/>
+    </Scroll>
   </div>
 </template>
 
@@ -20,6 +21,7 @@
   import NavBar from "components/common/navbar/NavBar";
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsList from "components/content/goods/GoodsList";
+  import Scroll from "components/common/scroll/Scroll";
 
   import { getHomeMultidata,getHomeGoods } from "network/home";
 
@@ -31,7 +33,8 @@
       FeatureView,
       NavBar,
       TabControl,
-      GoodsList
+      GoodsList,
+      Scroll
     },
     data() {
       return {
@@ -82,7 +85,7 @@
      **/
       getHomeMultidata() {
         getHomeMultidata().then(res => {
-          console.log(res);
+          // console.log(res);
           this.banners = res.data.banner.list;
           this.recommends = res.data.recommend.list;
         })
@@ -90,7 +93,7 @@
       getHomeGoods(type) {
         const page = this.goods[type].page + 1
         getHomeGoods(type,page).then(res => {
-          console.log(res);
+          // console.log(res);
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
         })
@@ -101,7 +104,8 @@
 
 <style scoped>
   #home {
-    padding-top: 44px;
+    height: 100vh;
+    /*  vh viewport height  */
   }
   .home-nav {
     background-color: var(--color-tint);
@@ -117,5 +121,9 @@
     position: sticky;
     top: 44px;
     z-index: 9;
+  }
+  .content {
+    height: calc(100% - 93px);
+    margin-top: 44px;
   }
 </style>
