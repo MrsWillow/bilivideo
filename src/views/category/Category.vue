@@ -1,19 +1,22 @@
 <template>
   <div class="wrapper" ref="aaaa">
- <!--  wrapper 下只能有一个大的标签  -->
-    <div>
+    <scroll>
       <button @click="btnClick">按钮</button>
       <ul class="content">
         <li v-for="item in 100">{{ item }}</li>
       </ul>
-    </div>
+    </scroll>
   </div>
 
 </template>
 
 <script>
+  import Scroll from "components/common/scroll/Scroll";
   export default {
     name: "Category",
+    components: {
+      Scroll
+    },
     data() {
       return {
         scroll: null

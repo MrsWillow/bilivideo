@@ -6,6 +6,8 @@ import store from "./store";
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 
+Vue.prototype.$bus = new Vue()
+
 new Vue({
   render: h => h(App),
   router,

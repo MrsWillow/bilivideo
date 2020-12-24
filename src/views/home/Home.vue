@@ -1,7 +1,12 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <Scroll class="content">
+    <scroll class="content"
+            ref="scroll"
+            :probe-type="3"
+            :pull-up-load = true
+            @scroll="contentScroll"
+            >
       <home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
@@ -9,7 +14,9 @@
                    :titles="['流行','新款','精选']"
                    @tabClick="tabClick"/>
       <goods-list :goods="showGoods"/>
-    </Scroll>
+    </scroll>
+    <!-- 监听组件点击,@click.native   -->
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -22,6 +29,7 @@
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsList from "components/content/goods/GoodsList";
   import Scroll from "components/common/scroll/Scroll";
+  import BackTop from "components/content/backTop/BackTop";
 
   import { getHomeMultidata,getHomeGoods } from "network/home";
 
@@ -34,7 +42,8 @@
       NavBar,
       TabControl,
       GoodsList,
-      Scroll
+      Scroll,
+      BackTop
     },
     data() {
       return {
@@ -45,7 +54,8 @@
           'new': { page: 0,list: [] },
           'sell': { page: 0,list: [] },
         },
-        currentType: 'pop'
+        currentType: 'pop',
+        isShowBackTop: false
       }
     },
     created() {
@@ -55,17 +65,20 @@
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
+      //  监听goodsItem图片加载完成
+      this.$bus.$on('itemImageLoad',() => {
+        this.$refs.scroll.scroll.refresh()
+      })
     },
     computed: {
       showGoods(){
         return this.goods[this.currentType].list
-
       }
     },
     methods: {
       /*
       *   事件监听
-      **/
+      */
       tabClick(index) {
         switch (index) {
           case 0:
@@ -79,11 +92,24 @@
             break
         }
       },
+      backClick() {
+        //  组件内部封装了方法
+        this.$refs.scroll.scrollTo(0,0,500)
+      },
+      contentScroll(position) {
+        this.isShowBackTop = (-position.y )> 1000
+      },
+      loadMore() {
+        console.log('上拉加载');
+        this.getHomeGoods(this.currentType)
+        // scroll 组件会提前计算好可滚动的区域，而图片是
+        // 异步加载的，组件计算的高度不包含图片高度，需要刷新重新计算高度
+      },
 
       /*
-     *   网络请求
-     **/
-      getHomeMultidata() {
+      *   网络请求
+      */
+      getHomeMultidata()  {
         getHomeMultidata().then(res => {
           // console.log(res);
           this.banners = res.data.banner.list;
@@ -93,7 +119,9 @@
       getHomeGoods(type) {
         const page = this.goods[type].page + 1
         getHomeGoods(type,page).then(res => {
-          // console.log(res);
+          // for (let item of res.data.list) {
+          //   this.goods[type].list.push(item)
+          // }
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
         })
@@ -105,6 +133,7 @@
 <style scoped>
   #home {
     height: 100vh;
+    position: relative;
     /*  vh viewport height  */
   }
   .home-nav {
@@ -123,7 +152,16 @@
     z-index: 9;
   }
   .content {
-    height: calc(100% - 93px);
-    margin-top: 44px;
+    overflow: hidden;
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
   }
+  /*.content {*/
+  /*  height: calc(100% - 93px);*/
+  /*  overflow: hidden;*/
+  /*  margin-top: 44px;*/
+  /*}*/
 </style>
