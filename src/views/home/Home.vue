@@ -6,13 +6,15 @@
             :probe-type="3"
             :pull-up-load = true
             @scroll="contentScroll"
+            @pullingUp="loadMore"
             >
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImgLoad="swiperImgLoad"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
-      <tab-control class="tab-control"
-                   :titles="['流行','新款','精选']"
-                   @tabClick="tabClick"/>
+      <tab-control :titles="['流行','新款','精选']"
+                   @tabClick="tabClick"
+                   ref="tabControl"
+                   :class="{ fixed: isTabFixed}"/>
       <goods-list :goods="showGoods"/>
     </scroll>
     <!-- 监听组件点击,@click.native   -->
@@ -32,6 +34,7 @@
   import BackTop from "components/content/backTop/BackTop";
 
   import { getHomeMultidata,getHomeGoods } from "network/home";
+  import { debounce } from "common/utils";
 
   export default {
     name: "Home",
@@ -55,7 +58,9 @@
           'sell': { page: 0,list: [] },
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0,
+        isTabFixed: false
       }
     },
     created() {
@@ -65,9 +70,12 @@
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
+    },
+    mounted() {
       //  监听goodsItem图片加载完成
+      const refresh = debounce(this.$refs.scroll.refresh,200)
       this.$bus.$on('itemImageLoad',() => {
-        this.$refs.scroll.scroll.refresh()
+        refresh()
       })
     },
     computed: {
@@ -97,13 +105,21 @@
         this.$refs.scroll.scrollTo(0,0,500)
       },
       contentScroll(position) {
-        this.isShowBackTop = (-position.y )> 1000
+        // backTop
+        this.isShowBackTop = (-position.y ) > 1000
+        // tabControl position:fixed
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       loadMore() {
         console.log('上拉加载');
         this.getHomeGoods(this.currentType)
         // scroll 组件会提前计算好可滚动的区域，而图片是
         // 异步加载的，组件计算的高度不包含图片高度，需要刷新重新计算高度
+      },
+      swiperImgLoad() {
+        // 获取tabControl的offsetTop
+        // 所有的组件都有一个属性$el: 用于获取组件中的元素
+        this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
       },
 
       /*
@@ -124,6 +140,9 @@
           // }
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
+
+          // 完成上拉加载更多
+          this.$refs.scroll.finishPullUp()
         })
       }
     }
@@ -146,11 +165,6 @@
     top: 0;
     z-index: 9;
   }
-  .tab-control {
-    position: sticky;
-    top: 44px;
-    z-index: 9;
-  }
   .content {
     overflow: hidden;
     position: absolute;
@@ -164,4 +178,11 @@
   /*  overflow: hidden;*/
   /*  margin-top: 44px;*/
   /*}*/
+
+  .fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 44px;
+  }
 </style>
