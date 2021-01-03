@@ -1,20 +1,23 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+    <tab-control :titles="['流行','新款','精选']"
+                 @tabClick="tabClick"
+                 ref="tabControl1"
+                 class="tab-control"
+                 v-show="isTabFixed"/>
     <scroll class="content"
             ref="scroll"
             :probe-type="3"
             :pull-up-load = true
             @scroll="contentScroll"
-            @pullingUp="loadMore"
-            >
+            @pullingUp="loadMore">
       <home-swiper :banners="banners" @swiperImgLoad="swiperImgLoad"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
       <tab-control :titles="['流行','新款','精选']"
                    @tabClick="tabClick"
-                   ref="tabControl"
-                   :class="{ fixed: isTabFixed}"/>
+                   ref="tabControl2"/>
       <goods-list :goods="showGoods"/>
     </scroll>
     <!-- 监听组件点击,@click.native   -->
@@ -23,18 +26,17 @@
 </template>
 
 <script>
-  import HomeSwiper from "./chiildComps/HomeSwiper";
-  import RecommendView from "./chiildComps/RecommendView";
-  import FeatureView from "./chiildComps/FeatureView";
+  import HomeSwiper from "./childComps/HomeSwiper";
+  import RecommendView from "./childComps/RecommendView";
+  import FeatureView from "./childComps/FeatureView";
 
   import NavBar from "components/common/navbar/NavBar";
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsList from "components/content/goods/GoodsList";
-  import Scroll from "components/common/scroll/Scroll";
-  import BackTop from "components/content/backTop/BackTop";
+  import Scroll from "components/common/scroll/Scroll"
 
   import { getHomeMultidata,getHomeGoods } from "network/home";
-  import { debounce } from "common/utils";
+  import { itemListenerMixin,backTopMixIn } from "common/mixin";
 
   export default {
     name: "Home",
@@ -46,8 +48,8 @@
       TabControl,
       GoodsList,
       Scroll,
-      BackTop
     },
+    mixins: [itemListenerMixin,backTopMixIn],
     data() {
       return {
         banners: [],
@@ -58,9 +60,9 @@
           'sell': { page: 0,list: [] },
         },
         currentType: 'pop',
-        isShowBackTop: false,
         tabOffsetTop: 0,
-        isTabFixed: false
+        isTabFixed: false,
+        saveY: 0,
       }
     },
     created() {
@@ -71,17 +73,22 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
-    mounted() {
-      //  监听goodsItem图片加载完成
-      const refresh = debounce(this.$refs.scroll.refresh,200)
-      this.$bus.$on('itemImageLoad',() => {
-        refresh()
-      })
-    },
     computed: {
       showGoods(){
         return this.goods[this.currentType].list
       }
+    },
+    // 活跃
+    activated() {
+      this.$refs.scroll.scrollTo(0,this.saveY,0)
+      this.$refs.scroll.refresh()
+    },
+    // 离开
+    deactivated() {
+      // 保存滚动位置
+      this.saveY = this.$refs.scroll.getScrollY()
+      // 取消全部事件的监听
+      this.$bus.$off('itemImageLoad',this.itemImgListener)
     },
     methods: {
       /*
@@ -99,11 +106,10 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl1.currentIndex = index
+        this.$refs.tabControl2.currentIndex = index
       },
-      backClick() {
-        //  组件内部封装了方法
-        this.$refs.scroll.scrollTo(0,0,500)
-      },
+
       contentScroll(position) {
         // backTop
         this.isShowBackTop = (-position.y ) > 1000
@@ -111,7 +117,6 @@
         this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       loadMore() {
-        console.log('上拉加载');
         this.getHomeGoods(this.currentType)
         // scroll 组件会提前计算好可滚动的区域，而图片是
         // 异步加载的，组件计算的高度不包含图片高度，需要刷新重新计算高度
@@ -119,7 +124,7 @@
       swiperImgLoad() {
         // 获取tabControl的offsetTop
         // 所有的组件都有一个属性$el: 用于获取组件中的元素
-        this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
       },
 
       /*
@@ -157,13 +162,13 @@
   }
   .home-nav {
     background-color: var(--color-tint);
-    color: white;
-
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;
+    color: #fff;
+    /*在使用浏览器原生滚动时，为了不让导航跟随一起滚动*/
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*top: 0;*/
+    /*z-index: 9;*/
   }
   .content {
     overflow: hidden;
@@ -178,11 +183,15 @@
   /*  overflow: hidden;*/
   /*  margin-top: 44px;*/
   /*}*/
-
-  .fixed {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 44px;
+  .tab-control {
+    position: relative;
+    z-index: 9;
   }
+
+  /*.fixed {*/
+  /*  position: fixed;*/
+  /*  left: 0;*/
+  /*  right: 0;*/
+  /*  top: 44px;*/
+  /*}*/
 </style>

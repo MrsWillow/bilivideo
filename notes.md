@@ -17,7 +17,7 @@
 ```
 this.$router  创建的路由对象
 this.$route   当前活跃的路由
-``` 
+```
 ## Promise
 ```
 Promise 是异步编程的一种解决方案,有异步操作时，使用Promise对这个异步操作进行封装
@@ -38,4 +38,8 @@ const { name,address,age } = obj
 ```
 const names = [a,b,c]
 const [name1,name2,name3] = names  ==>  name1 = a
+```
+## HTML
+```
+100% 是相对于父元素，父元素若没有固定高宽就是实际内容撑开的高宽
 ```

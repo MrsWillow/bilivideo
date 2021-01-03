@@ -9,43 +9,43 @@
     name: "TabBar",
     // Promise 使用
     mounted() {
-          new Promise((resolve,reject) => {
+      new Promise((resolve,reject) => {
+          setTimeout(() => {
+              resolve('hhh')
+          },1000)
+          reject('error')
+      }).then((data) => {
+          console.log(data)
+          // return Promise.resolve('aaa')
+          // return 'aaa'
+          return new Promise((resolve,reject) => {
               setTimeout(() => {
-                  resolve('hhh')
-              },1000)
-              reject('error')
+                  resolve('aaa')
+              },2000)
           }).then((data) => {
-              console.log(data)
-              // return Promise.resolve('aaa')
-              // return 'aaa'
-              return new Promise((resolve,reject) => {
-                  setTimeout(() => {
-                      resolve('aaa')
-                  },2000)
-              }).then((data) => {
-                  // console.log(data)
-              })
-          }).catch(error => {
-              // console.log(error)
+              // console.log(data)
           })
+      }).catch(error => {
+          // console.log(error)
+      })
 
-          Promise.all([
-              new Promise(reslove => {
-                  setTimeout(() => {
-                      // console.log('请求1');
-                      reslove('请求1')
-                  },2000)
-              }),
-              new Promise(reslove => {
-                  setTimeout(() => {
-                      // console.log('请求2');
-                      reslove('请求2')
-                  },1000)
-              }),
-          ]).then(results => {
-              // console.log(results)
-          })
-      },
+      Promise.all([
+          new Promise(reslove => {
+              setTimeout(() => {
+                  // console.log('请求1');
+                  reslove('请求1')
+              },2000)
+          }),
+          new Promise(reslove => {
+              setTimeout(() => {
+                  // console.log('请求2');
+                  reslove('请求2')
+              },1000)
+          }),
+      ]).then(results => {
+          // console.log(results)
+      })
+    },
   }
 </script>
 
