@@ -37,6 +37,8 @@
   import { itemListenerMixin,backTopMixIn } from "common/mixin";
   import { debounce } from "common/utils";
 
+  import { mapActions } from 'vuex'
+
   export default {
     name: "Detail",
     components: {
@@ -112,6 +114,10 @@
       },100)
     },
     methods: {
+      // actions 中的方法映射到 methods
+      ...mapActions({
+        addToCart: 'addCart'
+      }),
       imageLoad() {
         this.newRefresh()
         this.getThemeTopYs()
@@ -148,7 +154,13 @@
         product.iid = this.iid
 
         // 添加购物车
-        this.$store.dispatch('addCart',product)
+        // this.$store.dispatch('addCart',product)
+        //   .then(res => {
+        //     console.log(res);
+        //   })
+        this.addToCart(product).then(res => {
+          console.log(res);
+        })
       }
 
     }
