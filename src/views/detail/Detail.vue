@@ -15,7 +15,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"/>
       <goods-list ref="recommend" :goods="recommends"/>
     </scroll>
-    <detail-bottom-bar style="z-index: 1000"/>
+    <detail-bottom-bar @addCart="addCart"/>
     <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
@@ -138,6 +138,19 @@
         }
         this.isShowBackTop = (-position.y ) > 1000
       },
+      addCart() {
+        // 获取购物车需要展示的信息
+        const product = {}
+        product.image = this.topImages[0]
+        product.title = this.goods.title
+        product.desc = this.goods.desc
+        product.price = this.goods.realPrice
+        product.iid = this.iid
+
+        // 添加购物车
+        this.$store.dispatch('addCart',product)
+      }
+
     }
   }
 </script>
@@ -155,6 +168,6 @@
     background-color: white;
   }
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 93px);
   }
 </style>
