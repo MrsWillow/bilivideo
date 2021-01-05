@@ -38,7 +38,6 @@
   import { debounce } from "common/utils";
 
   import { mapActions } from 'vuex'
-
   export default {
     name: "Detail",
     components: {
@@ -159,7 +158,7 @@
         //     console.log(res);
         //   })
         this.addToCart(product).then(res => {
-          console.log(res);
+          this.$toast.show(res,1500)
         })
       }
 

@@ -1,30 +1,43 @@
 <template>
-  <div class="wrapper" ref="aaaa">
-    <scroll>
-      <button @click="btnClick">按钮</button>
-      <ul class="content">
-        <li v-for="item in 100">{{ item }}</li>
-      </ul>
-    </scroll>
+  <div class="category">
+
   </div>
 
 </template>
 
 <script>
-  import Scroll from "components/common/scroll/Scroll";
+  import { getCategory,getSubcategory,getSubDetail } from "network/category";
   export default {
     name: "Category",
-    components: {
-      Scroll
-    },
     data() {
       return {
-        scroll: null
+        maitKey: 3627,
+        miniWallkey: 10062603
       }
     },
+    created() {
+      this.getCategory()
+      this.getSubcategory()
+      this.getSubDetail()
+    },
     methods: {
-      btnClick() {
-        console.log('btnClick');
+      getCategory() {
+        getCategory()
+        .then(res => {
+          console.log(res);
+        })
+      },
+      getSubcategory() {
+        getSubcategory(this.maitKey)
+          .then(res => {
+            console.log(res);
+          })
+      },
+      getSubDetail() {
+        getSubDetail(this.miniWallkey)
+          .then(res => {
+            console.log(res);
+          })
       }
     }
   }
