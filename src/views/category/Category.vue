@@ -1,16 +1,19 @@
 <template>
   <div class="category">
-
+    <side-bar :title-list="titleList"/>
   </div>
 
 </template>
 
 <script>
   import { getCategory,getSubcategory,getSubDetail } from "network/category";
+  import SideBar from "./childComps/SideBar";
   export default {
     name: "Category",
+    components: {SideBar},
     data() {
       return {
+        titleList: [],
         maitKey: 3627,
         miniWallkey: 10062603
       }
@@ -25,6 +28,7 @@
         getCategory()
         .then(res => {
           console.log(res);
+          this.titleList = res.data.category.list
         })
       },
       getSubcategory() {
@@ -44,9 +48,8 @@
 </script>
 
 <style scoped>
-  .wrapper {
-    height: 150px;
-    background-color: red;
-    overflow: hidden;
+  .category {
+    position: relative;
+    z-index: 9;
   }
 </style>
