@@ -22,7 +22,16 @@
     },
     computed: {
       showImage() {
-        return  this.goodsItem.image || this.goodsItem.show.img
+        // if (this.this.goodsItem.image !== null ) {
+        //   return this.this.goodsItem.image
+        // }
+        // if (this.goodsItem.show.img !== null ) {
+        //   return this.goodsItem.show.img
+        // }
+        // if (this.goodsItem.img !== null ) {
+        //   return this.goodsItem.img
+        // }
+        return  this.goodsItem.image || this.goodsItem.img || this.goodsItem.show.img
       }
     },
     methods: {

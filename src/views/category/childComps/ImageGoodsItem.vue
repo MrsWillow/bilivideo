@@ -1,12 +1,12 @@
 <template>
   <div class="img-goods-item">
-    <img v-lazy="goodsItem.image"/>
-    <span>{{ goodsItem.title }}</span>
+    <img v-lazy="goodsItem.image" @load="imgLoad"/>
+    <p>{{ goodsItem.title }}</p>
   </div>
 </template>
 
 <script>
-  export default {
+    export default {
     name: "ImageGoodsItem",
     props: {
       goodsItem: {
@@ -15,6 +15,11 @@
           return {}
         }
       }
+    },
+    methods: {
+      imgLoad() {
+        this.$bus.$emit('itemImageLoad')
+      },
     }
   }
 </script>
@@ -23,15 +28,15 @@
   .img-goods-item {
     padding-bottom: 20px;
     position: relative;
-    width: 100px;
-    background-color: rgba(236, 121, 15, 0.15);
-    margin-bottom: 10px;
+    width: 30%;
+    /*height: 100px;*/
+    /*margin-bottom: 10px;*/
   }
   .img-goods-item img{
-    width: 95%;
+    width: 100%;
     text-align: center;
   }
-  .img-goods-item span{
+  .img-goods-item p{
     font-size: 12px;
     position: absolute;
     bottom: 5px;
